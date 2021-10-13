@@ -2,6 +2,10 @@
 /dist
 /node_modules
 
+# pgadmin
+/pgadmin
+/pgdata
+
 # Logs
 logs
 *.log
