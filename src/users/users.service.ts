@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -11,10 +11,10 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  create(userDto: UserDto): Promise<User> {
     const user = new User();
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
+    user.username = userDto.username;
+    user.password = userDto.password;
 
     return this.usersRepository.save(user);
   }
@@ -23,22 +23,26 @@ export class UsersService {
     return await this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne(id);
+  async findOne(id: number): Promise<User> {
+    return await this.usersRepository.findOne(id);
   }
 
-  async update(id: number, createUserDto: CreateUserDto): Promise<User> {
+  async findByName(username: string): Promise<User | undefined> {
+    return await this.usersRepository.findOne({username});
+  }
+
+  async update(id: number, userDto: UserDto): Promise<User> {
     const editedUser = await this.usersRepository.findOne(id);
     if (!editedUser) {
       throw new NotFoundException('User not found');
     }
-    editedUser.firstName = createUserDto.firstName;
-    editedUser.lastName = createUserDto.lastName;
+    editedUser.username = userDto.username;
+    editedUser.password = userDto.password;
     await this.usersRepository.save(editedUser);
     return editedUser;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
 }
