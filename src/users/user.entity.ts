@@ -1,5 +1,6 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Profile } from 'src/profile/profile.entity';
 
 @Entity()
 export class User {
@@ -11,6 +12,13 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToOne(() => Profile, profile => profile.user,  {
+    eager: true,
+    cascade: true
+  }) // specify inverse side as a second parameter
+  @JoinColumn()
+  profile: Profile;
 
   @BeforeInsert()
   @BeforeUpdate()
