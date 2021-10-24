@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProfileDto } from 'src/profile/dto/profile.dto';
+import { CreateProfileDto } from 'src/profile/dto/CreateProfile.dto';
 import { ProfileService } from 'src/profile/profile.service';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 
@@ -12,20 +12,34 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private profileService: ProfileService
-    
+    private profileService: ProfileService,
+    private connection: Connection
   ) {}
 
-  create(userDto: UserDto, profileDto: ProfileDto): Promise<User> {
+  async create(userDto: UserDto, createProfileDto: CreateProfileDto): Promise<User> {
     const user = new User();
     user.username = userDto.username;
     user.password = userDto.password;
-    
-    this.profileService.create(profileDto)
-      .then(res => user.profile = res)
-      .catch(err => console.error(err));  
+    const queryRunner = this.connection.createQueryRunner();
 
-    return this.usersRepository.save(user);
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+
+      user.profile = this.profileService.fillCreateDto(createProfileDto);
+      
+      //await queryRunner.manager.save(user);
+      await this.usersRepository.save(user);
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(null, error.detail);
+    } finally{
+      // you need to release a queryRunner which was manually instantiated
+      await queryRunner.release();
+    }
+
   }
 
   async findAll(): Promise<User[]> {

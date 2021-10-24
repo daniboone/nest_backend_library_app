@@ -1,9 +1,7 @@
-import { Controller, Get, Param, Patch, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Param, Patch, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { join } from 'path';
-import { Observable, of } from 'rxjs';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { FileDto } from 'src/utils/files/dto/file.dto';
 import { FileService } from 'src/utils/files/file.service';
@@ -36,8 +34,4 @@ export class ProfileController {
         return {filename: file.filename};
     }
 
-    @Get('image/:imagename')
-    findProfileImage(@Param('imagename') imagename, @Res() res): Observable<Object> {
-        return of(res.sendFile(join(process.cwd(), 'upload/profile/' + imagename)));
-    }
 }

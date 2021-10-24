@@ -4,15 +4,15 @@ import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UsersService } from './users.service';
-import { ProfileDto } from 'src/profile/dto/profile.dto';
+import { CreateProfileDto } from 'src/profile/dto/CreateProfile.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() userDto: UserDto, @Body() profileDto: ProfileDto): Promise<User> {
-    return this.usersService.create(userDto, profileDto);
+  create(@Body() userDto: UserDto, @Body() createProfileDto: CreateProfileDto): Promise<User> {
+    return this.usersService.create(userDto, createProfileDto);
   }
 
   @ApiBearerAuth()

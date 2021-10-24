@@ -1,25 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProfileDto } from './dto/profile.dto';
+import { CreateProfileDto } from './dto/CreateProfile.dto';
 import { Profile } from './profile.entity';
-import { ProfileInterface } from './interfaces/profile.interface';
+import { UpdateProfileDto } from './dto/UpdateProfile.dto';
 
 @Injectable()
 export class ProfileService {
+
     constructor(
         @InjectRepository(Profile)
         private readonly profileRepository: Repository<Profile>,
     ) {}
-    
-    async create(profileDto: ProfileDto): Promise<Profile> {
+
+    fillCreateDto(createProfileDto: CreateProfileDto){
         const profile = new Profile();
-        profile.name = profileDto.name;
-        profile.surname = profileDto.surname;
-        profile.address = profileDto.address;
-        profile.email_address = profileDto.email_address;
-        profile.phone_number = profileDto.phone_number;
-        profile.photo = profileDto.photo;
+
+        profile.name = createProfileDto.name;
+        profile.surname = createProfileDto.surname;
+        profile.address = createProfileDto.address;
+        profile.email_address = createProfileDto.email_address;
+        profile.phone_number = createProfileDto.phone_number;
+
+        return profile;
+    }
+
+    
+    async create(createProfileDto: CreateProfileDto): Promise<Profile> {
+        
+        const profile = this.fillCreateDto(createProfileDto);
 
         return await this.profileRepository.save(profile);
     }
@@ -36,15 +45,15 @@ export class ProfileService {
         return await this.profileRepository.findOne({email_address});
     }
 
-    async update(id: number, profileInterface: ProfileInterface): Promise<Profile> {
+    async update(id: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
         const editedProfile = await this.profileRepository.findOne(id);
 
-        editedProfile.name = profileInterface.name;
-        editedProfile.surname = profileInterface.surname;
-        editedProfile.address = profileInterface.address;
-        editedProfile.email_address = profileInterface.email_address;
-        editedProfile.phone_number = profileInterface.phone_number;
-        editedProfile.photo = profileInterface.photo;
+        editedProfile.name = updateProfileDto.name;
+        editedProfile.surname = updateProfileDto.surname;
+        editedProfile.address = updateProfileDto.address;
+        editedProfile.email_address = updateProfileDto.email_address;
+        editedProfile.phone_number = updateProfileDto.phone_number;
+        editedProfile.photo = updateProfileDto.photo;
 
         await this.profileRepository.save(editedProfile);
         return editedProfile;

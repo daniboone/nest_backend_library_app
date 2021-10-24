@@ -7,7 +7,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true})
   username: string;
 
   @Column()
@@ -15,7 +15,8 @@ export class User {
 
   @OneToOne(() => Profile, profile => profile.user,  {
     eager: true,
-    cascade: true
+    cascade: true,
+    onDelete: 'CASCADE'
   }) // specify inverse side as a second parameter
   @JoinColumn()
   profile: Profile;

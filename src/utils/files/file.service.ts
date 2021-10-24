@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -8,6 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 export class FileService implements MulterOptionsFactory {
 
   editFileName = (req, file, cb) => {
+
+    if (file === undefined) {
+      return cb(new BadRequestException(), false)
+    }
     const name = uuidv4();
     const fileExtName = extname(file.originalname);
     
@@ -17,7 +21,7 @@ export class FileService implements MulterOptionsFactory {
   imageFileFilter = (req, file, cb) => {
     if (!file.mimetype.match('image')) {
       return cb(new HttpException('Only image files are allowed!',
-        HttpStatus.UNSUPPORTED_MEDIA_TYPE), false);
+        HttpStatus.BAD_REQUEST), false);
     }
     cb(null, true);
   };

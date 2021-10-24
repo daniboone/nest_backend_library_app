@@ -16,13 +16,13 @@ export class Profile {
     @Column()
     address: string;
 
-    @Column()
+    @Column({ unique: true })
     email_address: string;
 
     @Column()
     phone_number: string;
 
-    @Column()
+    @Column({ nullable: true })
     photo: string;
 
     @OneToOne(() => User, user => user.profile) // specify inverse side as a second parameter

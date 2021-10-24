@@ -12,14 +12,18 @@ import { ProfileModule } from './profile/profile.module';
   imports: [TypeOrmModule.forRootAsync({
     imports: [ConfigModule.forRoot({cache: true})],    
     useFactory: (configService: ConfigService) => ({
-      type: 'postgres',
+      type: "postgres",
       host: configService.get('HOST'),
       port: +configService.get<number>('PORT'),
       username: configService.get('USERNAME'),
       password: configService.get('PASSWORD'),
       database: configService.get('DATABASE'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,      
+      synchronize: true,
+      migrations: [__dirname + '/migration/**/*.ts', __dirname + '/migration/**/*.js'],
+      cli: {
+        "migrationsDir": "src/migration"
+      }      
     }),
     inject: [ConfigService],
   }),
