@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsOptional, IsPhoneNumber, IsString, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsPhoneNumber, IsString, Matches, MinLength } from "class-validator";
 
 export class CreateProfileDto {
 
@@ -29,7 +29,7 @@ export class CreateProfileDto {
     @IsOptional()
     @IsString()
     @MinLength(5)
-    //@Matches(/.*\.(gif|jpe?g|bmp|png)$/) regex for image validation
+    //@Matches(/.*\.(gif|jpe?g|bmp|png)$/) //regex for image validation
     photo: string;
 
 }

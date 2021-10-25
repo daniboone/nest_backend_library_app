@@ -23,7 +23,9 @@ import { ProfileModule } from './profile/profile.module';
       migrations: [__dirname + '/migration/**/*.ts', __dirname + '/migration/**/*.js'],
       cli: {
         "migrationsDir": "src/migration"
-      }      
+      },
+      keepConnectionAlive: true,
+      autoLoadEntities: true      
     }),
     inject: [ConfigService],
   }),

@@ -1,4 +1,4 @@
-import { Controller, Param, Patch, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Controller, Param, Patch, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
@@ -30,8 +30,13 @@ export class ProfileController {
         type: FileDto,
     })
     profilePic(@UploadedFile() file: Express.Multer.File, @Param('id') id: number){
-        this.profileService.update(id, {photo: file.filename});
-        return {filename: file.filename};
+        try {
+            this.profileService.update(id, {photo: file.filename});
+            return {filename: file.filename};
+        } catch (error) {
+            throw new BadRequestException(null, error.message);
+        }
+        
     }
 
 }

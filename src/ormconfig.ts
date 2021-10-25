@@ -7,7 +7,7 @@ const config: ConnectionOptions = {
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    entities: [__dirname + './dist/**/*.entity.ts', __dirname + '/**/*.entity.js'],
     synchronize: true,
     migrations: [__dirname + '/migration/**/*.ts', __dirname + '/migration/**/*.js'],
     cli: {

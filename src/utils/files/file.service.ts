@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -8,10 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 export class FileService implements MulterOptionsFactory {
 
   editFileName = (req, file, cb) => {
-
-    if (file === undefined) {
-      return cb(new BadRequestException(), false)
-    }
     const name = uuidv4();
     const fileExtName = extname(file.originalname);
     
