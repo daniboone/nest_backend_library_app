@@ -1,6 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Profile } from 'src/profile/profile.entity';
+import { UserGroup } from 'src/user-group/user-group.entity';
 
 @Entity()
 export class User {
@@ -20,6 +21,12 @@ export class User {
   }) // specify inverse side as a second parameter
   @JoinColumn()
   profile: Profile;
+
+  @ManyToOne(() => UserGroup, userGroup => userGroup.users,{
+    eager: true,
+    cascade: true
+  })
+  usergroup: UserGroup;
 
   @BeforeInsert()
   @BeforeUpdate()

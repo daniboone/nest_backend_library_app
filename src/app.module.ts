@@ -7,6 +7,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './utils/files/file.module';
 import { ProfileModule } from './profile/profile.module';
+import { CaslModule } from './casl/casl.module';
+import { UserGroupModule } from './user-group/user-group.module';
+import { UserGroupRightsModule } from './user-group-rights/user-group-rights.module';
+import { ResourceModule } from './resource/resource.module';
+import { CreateModule } from './create/create.module';
+import { ReadModule } from './read/read.module';
+import { UpdateModule } from './update/update.module';
+import { DeleteModule } from './delete/delete.module';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
@@ -19,7 +27,7 @@ import { ProfileModule } from './profile/profile.module';
       password: configService.get('PASSWORD'),
       database: configService.get('DATABASE'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       migrations: [__dirname + '/migration/**/*.ts', __dirname + '/migration/**/*.js'],
       cli: {
         "migrationsDir": "src/migration"
@@ -32,7 +40,15 @@ import { ProfileModule } from './profile/profile.module';
   UsersModule,
   FileModule,
   ProfileModule,
-  AuthModule],
+  AuthModule,
+  CaslModule,
+  UserGroupModule,
+  UserGroupRightsModule,
+  ResourceModule,
+  CreateModule,
+  ReadModule,
+  UpdateModule,
+  DeleteModule],
   controllers: [AppController],
   providers: [AppService],
 })

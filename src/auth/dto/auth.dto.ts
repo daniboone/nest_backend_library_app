@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsNotEmptyObject, IsNumber, IsString } from "class-validator";
+import { Profile } from "src/profile/profile.entity";
+import { UserGroup } from "src/user-group/user-group.entity";
 
 export class AuthDto {
 
@@ -10,5 +12,13 @@ export class AuthDto {
     @ApiProperty()
     @IsString()
     username: string;
+
+    @ApiProperty()
+    @IsNotEmptyObject()
+    profile: Profile;
+
+    @ApiProperty()
+    @IsNotEmptyObject()
+    usergroup: UserGroup;
 
 }

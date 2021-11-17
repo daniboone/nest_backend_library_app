@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProfileDto } from 'src/profile/dto/CreateProfile.dto';
 import { ProfileService } from 'src/profile/profile.service';
+import { UserGroup } from 'src/user-group/user-group.entity';
 import { Connection, Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
@@ -27,6 +28,9 @@ export class UsersService {
     try {
 
       user.profile = this.profileService.fillCreateDto(createProfileDto);
+      const userGroup = new UserGroup();
+      userGroup.id = 2;
+      user.usergroup = userGroup;
       
       //await queryRunner.manager.save(user);
       await this.usersRepository.save(user);
@@ -34,6 +38,7 @@ export class UsersService {
       return user;
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      console.error(error);
       throw new BadRequestException(null, error.detail);
     } finally{
       // you need to release a queryRunner which was manually instantiated

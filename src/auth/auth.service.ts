@@ -7,7 +7,7 @@ import { JWTPayload } from './jwt.payload';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<boolean> {
@@ -17,9 +17,10 @@ export class AuthService {
 
   async generateAccessToken(name: string) {
     const user = await this.usersService.findByName(name);
-    const payload: JWTPayload = { id: user.id };
+    const payload: JWTPayload = 
+      { id: user.id, username: user.username, profile: user.profile, usergroup: user.usergroup};
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload)
     };
   }
 }
