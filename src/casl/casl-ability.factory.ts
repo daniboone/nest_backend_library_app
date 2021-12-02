@@ -1,16 +1,18 @@
 import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
 import { Action } from "src/enums/Action";
+import { LoanedBook } from "src/loaned-book/loaned-book.entity";
 import { Profile } from "src/profile/profile.entity";
+import { getRepository } from "typeorm";
 import { User } from "src/users/user.entity";
 
-type Subjects = InferSubjects<typeof Profile | typeof User> | 'all';
+type Subjects = InferSubjects<typeof Profile | typeof User | typeof LoanedBook> | 'all';
 
 export type AppAbility = Ability<[Action, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User, params: { id: string; }) {
+  async createForUser(user: User, params: { id: string; }) {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Action, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
@@ -19,6 +21,14 @@ export class CaslAbilityFactory {
       can(Action.Manage, 'all'); // read-write access to everything
     }
     if(params.id){
+      
+      const loanedBookRepository = getRepository(LoanedBook);
+      const loanedBook = await loanedBookRepository.findOne(params.id);
+      
+      if(user.id === loanedBook.user.id){
+        can(Action.Read, LoanedBook);
+        can(Action.Update, LoanedBook);
+      }  
       if (parseInt(params.id) === user.id) { // only owner and admin can access
         can(Action.Read, User);
         can(Action.Update, User);
@@ -73,3 +83,4 @@ export class CaslAbilityFactory {
     });
   }
 }
+

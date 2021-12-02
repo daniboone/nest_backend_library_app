@@ -15,6 +15,14 @@ import { CreateModule } from './create/create.module';
 import { ReadModule } from './read/read.module';
 import { UpdateModule } from './update/update.module';
 import { DeleteModule } from './delete/delete.module';
+import { BookModule } from './book/book.module';
+import { LoanedBookModule } from './loaned-book/loaned-book.module';
+import { LoanStatusModule } from './loan-status/loan-status.module';
+import { VolumeInfoModule } from './volume-info/volume-info.module';
+import { AuthorsModule } from './authors/authors.module';
+import { IndustryIdentifiersModule } from './industry-identifiers/industry-identifiers.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ImageLinksModule } from './image-links/image-links.module';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
@@ -27,7 +35,7 @@ import { DeleteModule } from './delete/delete.module';
       password: configService.get('PASSWORD'),
       database: configService.get('DATABASE'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
       migrations: [__dirname + '/migration/**/*.ts', __dirname + '/migration/**/*.js'],
       cli: {
         "migrationsDir": "src/migration"
@@ -48,7 +56,15 @@ import { DeleteModule } from './delete/delete.module';
   CreateModule,
   ReadModule,
   UpdateModule,
-  DeleteModule],
+  DeleteModule,
+  BookModule,
+  LoanedBookModule,
+  LoanStatusModule,
+  VolumeInfoModule,
+  AuthorsModule,
+  IndustryIdentifiersModule,
+  CategoriesModule,
+  ImageLinksModule],
   controllers: [AppController],
   providers: [AppService],
 })

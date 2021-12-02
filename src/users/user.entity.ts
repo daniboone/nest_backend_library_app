@@ -1,10 +1,12 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Profile } from 'src/profile/profile.entity';
 import { UserGroup } from 'src/user-group/user-group.entity';
+import { LoanedBook } from 'src/loaned-book/loaned-book.entity';
 
 @Entity()
 export class User {
+  
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,6 +15,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => LoanedBook, loanedBook => loanedBook.user)
+  loanedBook: LoanedBook[];
 
   @OneToOne(() => Profile, profile => profile.user,  {
     eager: true,

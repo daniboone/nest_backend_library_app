@@ -3,6 +3,7 @@ import {  Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Resource {
+  
   @PrimaryGeneratedColumn()
   id: number;
 
